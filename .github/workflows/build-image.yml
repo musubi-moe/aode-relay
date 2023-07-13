@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'interstellar-next'
-      - 'interstellar-dev'
+      - 'musubi.moe/main'
+      - 'musubi.moe/develop'
     tags:
       - 'v*interstellar*'
   pull_request:
@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   build-image:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: docker/setup-qemu-action@v2
@@ -37,8 +37,8 @@ jobs:
           flavor: |
             latest=auto
           tags: |
-            type=edge,branch=interstellar-next
-            type=edge,branch=interstellar-dev
+            type=edge,branch=musubi.moe/main
+            type=edge,branch=musubi.moe/develop
             type=semver,pattern={{raw}}
             type=ref,event=pr
       - uses: docker/build-push-action@v4
