@@ -6,7 +6,7 @@ on:
       - 'musubi.moe/main'
       - 'musubi.moe/develop'
     tags:
-      - 'v[0-9].[0-9].[0-9]+musubi-moe*'
+      - 'v[0-9]+.[0-9]+.[0-9]+\+musubi-moe*'
     paths:
       - .github/workflows/build-image.yml
       - Dockerfile
