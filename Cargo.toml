@@ -1,11 +1,11 @@
 [package]
-name = "ap-relay"
+name = "aode-relay"
 description = "A simple activitypub relay"
-version = "0.3.91"
-authors = ["asonix <asonix@asonix.dog>"]
+version = "0.3.91+musubi-moe.0.1"
+authors = ["asonix <asonix@asonix.dog>", "musubi.moe <musubi.moe@musubi.moe>"]
 license = "AGPL-3.0"
 readme = "README.md"
-repository = "https://git.asonix.dog/asonix/ap-relay"
+repository = "https://github.com/musubi-moe/aode-relay"
 keywords = ["activitypub", "relay"]
 edition = "2021"
 build = "src/build.rs"

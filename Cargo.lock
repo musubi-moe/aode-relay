@@ -390,8 +390,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3b13c32d80ecc7ab747b80c3784bce54ee8a7a0cc4fbda9bf4cda2cf6fe90854"
 
 [[package]]
-name = "ap-relay"
-version = "0.3.91"
+name = "aode-relay"
+version = "0.3.91+musubi-moe.0.1"
 dependencies = [
  "activitystreams",
  "activitystreams-ext",
