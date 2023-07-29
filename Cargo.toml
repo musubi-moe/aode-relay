@@ -1,7 +1,7 @@
 [package]
 name = "aode-relay"
 description = "A simple activitypub relay"
-version = "0.3.97+musubi-moe.0.3"
+version = "0.3.98+musubi-moe.0.3"
 authors = ["asonix <asonix@asonix.dog>", "musubi.moe <musubi.moe@musubi.moe>"]
 license = "AGPL-3.0"
 readme = "README.md"

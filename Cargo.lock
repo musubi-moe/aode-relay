@@ -391,7 +391,7 @@ checksum = "3b13c32d80ecc7ab747b80c3784bce54ee8a7a0cc4fbda9bf4cda2cf6fe90854"
 
 [[package]]
 name = "aode-relay"
-version = "0.3.97+musubi-moe.0.3"
+version = "0.3.98+musubi-moe.0.3"
 dependencies = [
  "activitystreams",
  "activitystreams-ext",
