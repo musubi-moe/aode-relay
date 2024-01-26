@@ -1,11 +1,11 @@
 use crate::{
     error::Error,
-    future::LocalBoxFuture,
+    future::BoxFuture,
     jobs::{debug_object, Deliver, JobState},
 };
 use activitystreams::iri_string::types::IriString;
-use background_jobs::ActixJob;
-use rand::{rngs::ThreadRng, Rng};
+use background_jobs::Job;
+use rand::Rng;
 
 use crate::data::NodeConfig;
 
@@ -39,9 +39,7 @@ impl DeliverMany {
         })
     }
 
-    fn apply_filter(rng: &mut ThreadRng, authority: &str, config: &NodeConfig) -> bool {
-        let dice = rng.gen::<u8>();
-
+    fn apply_filter(dice: u8, authority: &str, config: &NodeConfig) -> bool {
         if config.enable_probability && config.probability < dice {
             return false;
         }
@@ -56,10 +54,7 @@ impl DeliverMany {
     }
 
     #[tracing::instrument(name = "Deliver many", skip(state))]
-    async fn perform(self, state: JobState) -> Result<(), Error> {
-        let mut thread_rng = rand::thread_rng();
-
-
+    async fn perform(self, dice: u8, state: JobState) -> Result<(), Error> {
         for inbox in self.to {
             if self.filterable {
                 // All inbox should have... authority... but...
@@ -74,7 +69,7 @@ impl DeliverMany {
                 };
 
                 if let Some(cfg) = node_config.get(inbox_authority) {
-                    if !Self::apply_filter(&mut thread_rng, &self.actor_authority, cfg) {
+                    if !Self::apply_filter(dice, &self.actor_authority, cfg) {
                         tracing::info!("Skipping egress to {} due to given criteria", inbox_authority);
                         continue;
                     }
@@ -91,14 +86,17 @@ impl DeliverMany {
     }
 }
 
-impl ActixJob for DeliverMany {
+impl Job for DeliverMany {
     type State = JobState;
-    type Future = LocalBoxFuture<'static, Result<(), anyhow::Error>>;
+    type Future = BoxFuture<'static, anyhow::Result<()>>;
 
     const NAME: &'static str = "relay::jobs::DeliverMany";
     const QUEUE: &'static str = "deliver";
 
     fn run(self, state: Self::State) -> Self::Future {
-        Box::pin(async move { self.perform(state).await.map_err(Into::into) })
+        let mut thread_rng = rand::thread_rng();
+        let dice = thread_rng.gen::<u8>();
+
+        Box::pin(async move { self.perform(dice, state).await.map_err(Into::into) })
     }
 }
