@@ -72,7 +72,7 @@ pipeline {
                             stage('Build platform specific image') {
                                 steps {
                                     sh "docker buildx create --name container-${TARGET} --driver=docker-container"
-                                    sh "docker buildx build --builder container-${TARGET} -t $DOCKER_IMAGE:$DOCKER_TAG-${TARGET} --platform linux/${TARGET} ."
+                                    sh "docker buildx build --builder container-${TARGET} -f docker/Dockerfile -t $DOCKER_IMAGE:$DOCKER_TAG-${TARGET} --platform linux/${TARGET} ."
                                 }
                             }
                             stage('Push platform specific image') {

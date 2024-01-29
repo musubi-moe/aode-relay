@@ -57,6 +57,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          dockerfile: docker/Dockerfile
           platforms: ${{ matrix.docker-platforms }}
           cache-from: type=gha,scope=$GITHUB_REF_NAME/${{ matrix.docker-platforms }}
           cache-to: type=gha,scope=$GITHUB_REF_NAME/${{ matrix.docker-platforms }},mode=max
