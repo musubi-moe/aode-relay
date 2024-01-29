@@ -42,10 +42,10 @@ RUN set -eux; \
         esac; \
         rustup target add "${arch}-unknown-linux-musl"; \
         ln -s "target/${arch}-unknown-linux-musl/release/relay" "aode-relay"; \
-        export RUSTFLAGS="$RUSTFLAGS -C linker=${arch}-linux-musl-gcc"; \
-        cargo_args="--target=${arch}-unknown-linux-musl";\
+        export RUSTFLAGS="$RUSTFLAGS -C linker=${arch}-none-elf-gcc"; \
+        export CARGO_BUILD_TARGET="${arch}-unknown-linux-musl"; \
     fi; \
-    cargo build --frozen --release $cargo_args;
+    cargo build --frozen --release;
 
 ################################################################################
 
