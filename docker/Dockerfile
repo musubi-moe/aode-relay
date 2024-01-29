@@ -45,6 +45,7 @@ RUN set -eux; \
         export CC="${arch}-none-elf-gcc"; \
         export RUSTFLAGS="$RUSTFLAGS -C linker=${arch}-none-elf-gcc"; \
         export CARGO_BUILD_TARGET="${arch}-unknown-linux-musl"; \
+        rustc --print target-list; \
     fi; \
     cargo build --frozen --release;
 
