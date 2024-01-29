@@ -16,11 +16,14 @@ RUN \
         apk add gcc musl-dev; \
     else \
         case "${TARGETPLATFORM}" in \
-        linux/arm64) \
-            apk add gcc-aarch64-none-elf; \
-        ;; \
-        *) echo "unsupported architecture"; exit 1 ;; \
+            linux/arm64) arch='aarch64';; \
+            *) echo "unsupported architecture"; exit 1 ;; \
         esac; \
+        apk add gcc-${arch}-none-elf; \
+        host_arch=$(cat /etc/apk/arch); \
+        echo "${arch}" > /etc/apk/arch; \
+        apk add --no-cache musl-devl; \
+        echo "${host_arch}" > /etc/apk/arch; \
     fi;
 
 WORKDIR /opt/aode-relay
