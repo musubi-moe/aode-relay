@@ -44,6 +44,8 @@ RUN set -eux; \
     esac; \
     export RUSTFLAGS="-C target-cpu=generic -C target-feature=-crt-static -C link-self-contained=no"; \
     if [ "$BUILDPLATFORM" != "$TARGETPLATFORM" ]; then \
+        export CC="${arch}-none-elf-gcc"; \
+        export RUSTFLAGS="-C linker=${arch}-none-elf-gcc ${RUSTFLAGS}"; \
         export CARGO_BUILD_TARGET="${arch}-unknown-linux-musl"; \
     fi; \
     ln -s "target/${arch}-unknown-linux-musl/release/relay" "aode-relay"; \
