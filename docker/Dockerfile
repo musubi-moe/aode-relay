@@ -14,13 +14,13 @@ RUN \
     set -eux; \
     apk update; \
     if [ "$BUILDPLATFORM" == "$TARGETPLATFORM" ]; then \
-        apk add gcc musl-dev; \
+        apk add musl-dev; \
     else \
         case "${TARGETPLATFORM}" in \
             linux/arm64) arch='aarch64';; \
             *) echo "unsupported architecture"; exit 1 ;; \
         esac; \
-        apk remove gcc; \
+        apk del gcc; \
         apk add gcc-${arch}-none-elf; \
         host_arch=$(cat /etc/apk/arch); \
         echo "${arch}" > /etc/apk/arch; \
