@@ -20,10 +20,11 @@ RUN \
             linux/arm64) arch='aarch64';; \
             *) echo "unsupported architecture"; exit 1 ;; \
         esac; \
+        apk remove gcc; \
         apk add gcc-${arch}-none-elf; \
         host_arch=$(cat /etc/apk/arch); \
         echo "${arch}" > /etc/apk/arch; \
-        apk add --no-cache --allow-untrusted musl-dev; \
+        apk add --no-cache --allow-untrusted gcc musl-dev; \
         echo "${host_arch}" > /etc/apk/arch; \
         rustup target add "${arch}-unknown-linux-musl"; \
         rustup show; \
@@ -37,18 +38,19 @@ RUN cargo fetch;
 ADD . /opt/aode-relay
 
 RUN set -eux; \
-    case "${TARGETPLATFORM}" in \
-        linux/amd64) arch='x86_64';; \
-        linux/arm64) arch='aarch64';; \
-        *) echo "unsupported architecture"; exit 1 ;; \
-    esac; \
     export RUSTFLAGS="-C target-cpu=generic -C target-feature=-crt-static -C link-self-contained=no"; \
     if [ "$BUILDPLATFORM" != "$TARGETPLATFORM" ]; then \
+        case "${TARGETPLATFORM}" in \
+            linux/arm64) arch='aarch64';; \
+            *) echo "unsupported architecture"; exit 1 ;; \
+        esac; \
         export CC="${arch}-none-elf-gcc"; \
         export RUSTFLAGS="-C linker=${arch}-none-elf-gcc ${RUSTFLAGS}"; \
         export CARGO_BUILD_TARGET="${arch}-unknown-linux-musl"; \
+        ln -s "target/${arch}-unknown-linux-musl/release/relay" "aode-relay"; \
+    else \
+        ln -s "target/release/relay" "aode-relay"; \
     fi; \
-    ln -s "target/${arch}-unknown-linux-musl/release/relay" "aode-relay"; \
     cargo build --frozen --release;
 
 ################################################################################
