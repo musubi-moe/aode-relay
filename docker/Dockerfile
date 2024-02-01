@@ -45,7 +45,13 @@ RUN set -eux; \
         export CC="${arch}-none-elf-gcc"; \
         export RUSTFLAGS="$RUSTFLAGS -C linker=${arch}-none-elf-gcc"; \
         export CARGO_BUILD_TARGET="${arch}-unknown-linux-musl"; \
-        rustc --print target-list; \
+    else \
+        case "${TARGETPLATFORM}" in \
+            linux/amd64) arch='x86_64';; \
+            linux/arm64) arch='aarch64';; \
+            *) echo "unsupported architecture"; exit 1 ;; \
+        esac; \
+        ln -s "target/${arch}-unknown-linux-musl/release/relay" "aode-relay"; \
     fi; \
     cargo build --frozen --release;
 
