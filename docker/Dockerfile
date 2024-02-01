@@ -24,6 +24,8 @@ RUN \
         echo "${arch}" > /etc/apk/arch; \
         apk add --no-cache --allow-untrusted musl-dev; \
         echo "${host_arch}" > /etc/apk/arch; \
+        rustup target add "${arch}-unknown-linux-musl"; \
+        rustup show; \
     fi;
 
 WORKDIR /opt/aode-relay
@@ -41,10 +43,9 @@ RUN set -eux; \
     esac; \
     export RUSTFLAGS="-C target-cpu=generic -C target-feature=-crt-static -C link-self-contained=no"; \
     if [ "$BUILDPLATFORM" != "$TARGETPLATFORM" ]; then \
-        rustup target add "${arch}-unknown-linux-musl"; \
-        rustup default "${arch}-unknown-linux-musl"; \
         export CC="${arch}-none-elf-gcc"; \
         export RUSTFLAGS="$RUSTFLAGS -C linker=${arch}-none-elf-gcc"; \
+        export CARGO_BUILD_TARGET="${arch}-unknown-linux-musl"; \
     fi; \
     ln -s "target/${arch}-unknown-linux-musl/release/relay" "aode-relay"; \
     cargo build --frozen --release;
