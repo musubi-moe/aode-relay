@@ -21,11 +21,11 @@ RUN \
             *) echo "unsupported architecture"; exit 1 ;; \
         esac; \
         apk del gcc; \
-        apk add gcc-${arch}-none-elf; \
         host_arch=$(cat /etc/apk/arch); \
         echo "${arch}" > /etc/apk/arch; \
         apk add --no-cache --allow-untrusted gcc musl-dev; \
         echo "${host_arch}" > /etc/apk/arch; \
+        apk add gcc-${arch}-none-elf; \
         rustup target add "${arch}-unknown-linux-musl"; \
         rustup show; \
     fi;
