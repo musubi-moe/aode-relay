@@ -7,6 +7,7 @@ ARG RUST_VERSION=1.75
 FROM --platform=$BUILDPLATFORM rust:$RUST_VERSION-alpine$ALPINE_VERSION AS builder
 ARG BUILDPLATFORM
 ARG TARGETPLATFORM
+ARG RUST_VERSION
 
 RUN \
     --mount=type=cache,id=$BUILDPLATFORM-alpine,target=/var/cache/apk,sharing=locked \
@@ -24,6 +25,7 @@ RUN \
         echo "${arch}" > /etc/apk/arch; \
         apk add --no-cache --allow-untrusted musl-dev; \
         echo "${host_arch}" > /etc/apk/arch; \
+        rustup toolchain install "${RUST_VERSION}-${arch}-unknown-linux-musl"; \
         rustup target add "${arch}-unknown-linux-musl"; \
         rustup show; \
     fi;
