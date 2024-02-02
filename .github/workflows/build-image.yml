@@ -68,7 +68,7 @@ jobs:
         id: digest
         run: |
           digest="${{ steps.build.outputs.digest }}"
-          echo "digest=$DIGESTS_PATH/${digest#sha256:}" >> $GITHUB_OUTPUT
+          echo "digest=${digest#sha256:}" >> $GITHUB_OUTPUT
       - name: Upload digest
         uses: actions/upload-artifact@v4
         with:
