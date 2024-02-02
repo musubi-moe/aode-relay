@@ -15,12 +15,12 @@ RUN \
 
 WORKDIR /opt/aode-relay
 
-ADD Cargo.lock Cargo.toml .cargo /opt/aode-relay/
+COPY --link Cargo.lock Cargo.toml .cargo /opt/aode-relay/
 RUN \
     --mount=type=cache,id=$BUILDPLATFORM:/root/.cargo,target=/root/.cargo \
     cargo fetch;
 
-ADD . /opt/aode-relay
+COPY . /opt/aode-relay
 
 RUN \
     --mount=type=cache,id=$BUILDPLATFORM:/root/.cargo,target=/root/.cargo \
