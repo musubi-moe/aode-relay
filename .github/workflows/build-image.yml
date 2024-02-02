@@ -74,7 +74,8 @@ jobs:
         with:
           name: ${{ steps.digest.outputs.digest }}
           path: /dev/null
-          retention-days: 1
+          compression-level: 0
+          overwrite: true
 
   mix:
     if: github.event_name != 'pull_request'
