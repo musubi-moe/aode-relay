@@ -26,7 +26,10 @@ ADD . /opt/aode-relay
 RUN \
     --mount=type=cache,id=$BUILDPLATFORM:/opt/aode-relay/target,target=/opt/aode-relay/target \
     --mount=type=cache,id=$BUILDPLATFORM:/root/.cargo,target=/root/.cargo \
-    cargo build --frozen --release;
+    set -eux; \
+    cargo build --frozen --release; \
+    mkdir -p bin; \
+    cp -afL target/release/relay bin/aode-relay;
 
 ################################################################################
 
@@ -38,7 +41,7 @@ RUN \
     set -eux; \
     apk add -U ca-certificates curl tini;
 
-COPY --link --from=builder /opt/aode-relay/target/release/relay /usr/local/bin/aode-relay
+COPY --link --from=builder /opt/aode-relay/bin/aode-relay /usr/local/bin/aode-relay
 
 # Smoke test
 RUN /usr/local/bin/aode-relay --help
