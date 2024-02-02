@@ -5,22 +5,25 @@ ARG RUST_VERSION=1.75
 ################################################################################
 
 FROM rust:$RUST_VERSION-alpine$ALPINE_VERSION AS builder
-ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+ARG RUSTFLAGS="-C target-cpu=generic"
 
 RUN \
-    --mount=type=cache,id=$TARGETPLATFORM-alpine,target=/var/cache/apk,sharing=locked \
+    --mount=type=cache,id=$BUILDPLATFORM-alpine,target=/var/cache/apk,sharing=locked \
     set -eux; \
     apk add -U build-base;
 
 WORKDIR /opt/aode-relay
 
 ADD Cargo.lock Cargo.toml /opt/aode-relay/
-RUN cargo fetch;
+RUN \
+    --mount=type=cache,id=$BUILDPLATFORM-rust,target=/opt/aode-relay/target \
+    cargo fetch;
 
 ADD . /opt/aode-relay
 
-RUN set -eux; \
-    export RUSTFLAGS="-C target-cpu=generic"; \
+RUN \
+    --mount=type=cache,id=$BUILDPLATFORM-rust,target=/opt/aode-relay/target \
     cargo build --frozen --release;
 
 ################################################################################
