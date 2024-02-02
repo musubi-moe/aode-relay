@@ -35,7 +35,7 @@ ARG TARGETPLATFORM
 RUN \
     --mount=type=cache,id=$TARGETPLATFORM:/var/cache/apk,target=/var/cache/apk,sharing=locked \
     set -eux; \
-    apk add -U ca-certificates curl tini;
+    apk add -U ca-certificates tini wget;
 
 COPY --link --from=builder /opt/aode-relay/target/release/relay /usr/local/bin/aode-relay
 
@@ -61,4 +61,5 @@ CMD ["/usr/local/bin/aode-relay"]
 
 EXPOSE 8080
 
-HEALTHCHECK CMD curl -sSf "localhost:$PORT/healthz" > /dev/null || exit 1
+HEALTHCHECK --interval=1m --timeout=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:$PORT/healthz/ || exit 1
