@@ -9,7 +9,7 @@ ARG BUILDPLATFORM
 ARG RUSTFLAGS="-C target-cpu=generic"
 
 RUN \
-    --mount=type=cache,id=$BUILDPLATFORM-alpine-/var/cache/apk,target=/var/cache/apk,sharing=locked \
+    --mount=type=cache,id=$BUILDPLATFORM:/var/cache/apk,target=/var/cache/apk,sharing=locked \
     set -eux; \
     apk add -U build-base;
 
@@ -17,15 +17,15 @@ WORKDIR /opt/aode-relay
 
 ADD Cargo.lock Cargo.toml .cargo /opt/aode-relay/
 RUN \
-    --mount=type=cache,id=$BUILDPLATFORM-rust-./target,target=/opt/aode-relay/target \
-    --mount=type=cache,id=$BUILDPLATFORM-rust-/root/.cargo,target=/root/.cargo \
+    --mount=type=cache,id=$BUILDPLATFORM:/opt/aode-relay/target,target=/opt/aode-relay/target \
+    --mount=type=cache,id=$BUILDPLATFORM:/root/.cargo,target=/root/.cargo \
     cargo fetch;
 
 ADD . /opt/aode-relay
 
 RUN \
-    --mount=type=cache,id=$BUILDPLATFORM-rust-./target,target=/opt/aode-relay/target \
-    --mount=type=cache,id=$BUILDPLATFORM-rust-/root/.cargo,target=/root/.cargo \
+    --mount=type=cache,id=$BUILDPLATFORM:/opt/aode-relay/target,target=/opt/aode-relay/target \
+    --mount=type=cache,id=$BUILDPLATFORM:/root/.cargo,target=/root/.cargo \
     cargo build --frozen --release;
 
 ################################################################################
@@ -34,7 +34,7 @@ FROM alpine
 ARG TARGETPLATFORM
 
 RUN \
-    --mount=type=cache,id=$TARGETPLATFORM-alpine-/var/cache/apk,target=/var/cache/apk,sharing=locked \
+    --mount=type=cache,id=$TARGETPLATFORM:/var/cache/apk,target=/var/cache/apk,sharing=locked \
     set -eux; \
     apk add -U ca-certificates curl tini;
 
