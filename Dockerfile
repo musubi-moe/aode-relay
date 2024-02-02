@@ -62,4 +62,4 @@ CMD ["/usr/local/bin/aode-relay"]
 EXPOSE 8080
 
 HEALTHCHECK --interval=1m --timeout=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:$PORT/healthz/ || exit 1
+    CMD wget --no-verbose --tries=1 -O - -S http://localhost:$PORT/healthz || exit 1
