@@ -17,19 +17,15 @@ WORKDIR /opt/aode-relay
 
 ADD Cargo.lock Cargo.toml .cargo /opt/aode-relay/
 RUN \
-    --mount=type=cache,id=$BUILDPLATFORM:/opt/aode-relay/target,target=/opt/aode-relay/target \
     --mount=type=cache,id=$BUILDPLATFORM:/root/.cargo,target=/root/.cargo \
     cargo fetch;
 
 ADD . /opt/aode-relay
 
 RUN \
-    --mount=type=cache,id=$BUILDPLATFORM:/opt/aode-relay/target,target=/opt/aode-relay/target \
     --mount=type=cache,id=$BUILDPLATFORM:/root/.cargo,target=/root/.cargo \
     set -eux; \
-    cargo build --frozen --release; \
-    mkdir -p bin; \
-    cp -afL target/release/relay bin/aode-relay;
+    cargo build --frozen --release;
 
 ################################################################################
 
@@ -41,7 +37,7 @@ RUN \
     set -eux; \
     apk add -U ca-certificates curl tini;
 
-COPY --link --from=builder /opt/aode-relay/bin/aode-relay /usr/local/bin/aode-relay
+COPY --link --from=builder /opt/aode-relay/target/release/relay /usr/local/bin/aode-relay
 
 # Smoke test
 RUN /usr/local/bin/aode-relay --help
