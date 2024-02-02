@@ -60,8 +60,8 @@ jobs:
         with:
           context: .
           platforms: ${{ matrix.docker-platforms }}
-          cache-from: type=gha,scope=$GITHUB_REF_NAME/${{ matrix.docker-platforms }}
-          cache-to: type=gha,scope=$GITHUB_REF_NAME/${{ matrix.docker-platforms }},mode=max
+          cache-from: type=gha,scope=${{ matrix.docker-platforms }}
+          cache-to: type=gha,scope=${{ matrix.docker-platforms }},mode=max
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ env.DOCKER_IMAGE }},push-by-digest=${{ github.event_name != 'pull_request' }},name-canonical=true,push=${{ github.event_name != 'pull_request' }}
       - name: Export digest
